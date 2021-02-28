@@ -44,6 +44,10 @@ class NOCS_Dataset(Dataset):
             num_frames += self.num_frames[i] - 1
 
 
-dataset = NOCS_Dataset('/media/llewyn/TOSHIBA EXT/PoseEstimation/NOCS')
-print(dataset[0])
+class YCB_Dataset(Dataset):
+    def __init__(self, root_dir):
+        self.root_dir = root_dir
+
+#dataset = NOCS_Dataset('/media/llewyn/TOSHIBA EXT/PoseEstimation/NOCS')
+#print(dataset[0])
 
