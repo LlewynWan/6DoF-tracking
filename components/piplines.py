@@ -64,7 +64,7 @@ class ResNet_Baseline(nn.Module):
             nn.Conv2d(in_channel+s2dim, raw_dim, 3, 1, 1, bias=False),
             nn.BatchNorm2d(raw_dim),
             nn.LeakyReLU(0.1,True),
-            nn.Conv2d(raw_dim, ver_dim, 1, 1)
+            nn.Conv2d(raw_dim, ver_dim+1, 1, 1)
         )
 
 
@@ -88,11 +88,13 @@ class ResNet_Baseline(nn.Module):
         fm = self.up2storaw(fm)
 
         out = self.convraw(torch.cat([fm,stacked_image],1))
+        
+        offset, confidence = out[:,0:-1,...], out[:,-1,...]
 
-        return out
+        return offset, confidence
 
 
-#baseline = ResNet_Baseline(8)
-#prev_frame = torch.zeros(1,3,256,256)
-#next_frame = torch.zeros(1,3,256,256)
-#print(baseline(prev_frame,next_frame).shape)
+baseline = ResNet_Baseline(8)
+prev_frame = torch.zeros(1,3,256,256)
+next_frame = torch.zeros(1,3,256,256)
+print(baseline(prev_frame,next_frame))
