@@ -48,7 +48,16 @@ class NOCS_Dataset(Dataset):
                 mask1 = cv2.imread(os.path.join(self.root_dir, 'scene_'+str(i+1), idx1+'_mask.png'), cv2.IMREAD_COLOR)
                 mask2 = cv2.imread(os.path.join(self.root_dir, 'scene_'+str(i+1), idx2+'_mask.png'), cv2.IMREAD_COLOR)
 
-                return color1, coord1, depth1, mask1, color2, coord2, depth2, mask2
+                return {
+                        'color1': color1,
+                        'coord1': coord1,
+                        'depth1': depth1,
+                        'mask1': mask1,
+                        'color2': color2,
+                        'coord2': coord2,
+                        'depth2': depth2,
+                        'mask2': mask2
+                        }
             
             num_frames += self.num_frames[i]
 
@@ -97,7 +106,16 @@ class YCB_Dataset(Dataset):
                 intrinsic1 = sio.loadmat(os.path.join(folder, str(idx1).zfill(6)+'-meta.mat'))['intrinsic_matrix']
                 intrinsic2 = sio.loadmat(os.path.join(folder, str(idx2).zfill(6)+'-meta.mat'))['intrinsic_matrix']
 
-                return color1, depth1, label1, intrinsic1, color2, depth2, label2, intrinsic2
+                return {
+                        'color1': color1,
+                        'depth1': depth1,
+                        'label1': label1,
+                        'intrinsic1': intrinsic1,
+                        'color2': color2,
+                        'depth2': depth2,
+                        'label2': label2,
+                        'intrinsic2': intrinsic2
+                        }
 
             num_frames += self.num_frames[i]
 

@@ -11,5 +11,7 @@ if __name__=='__main__':
     dataloader = DataLoader(dataset, batch_size=8, shuffle=True, num_workers=4)
 
     for batch_idx, batch in enumerate(dataloader):
-        pass
-
+        color1 = batch['color1']
+        color2 = batch['color2']
+        offset = model(color1, color2)
+        
