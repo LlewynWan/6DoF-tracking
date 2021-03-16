@@ -63,12 +63,14 @@ class NOCS_Dataset(Dataset):
 
 
 class YCB_Dataset(Dataset):
+
     def __init__(self, root_dir, length=3):
         self.root_dir = os.path.join(root_dir, 'data')
         self.folders = os.listdir(self.root_dir)
 
         self.num_scenes = len(self.folders)
         self.length = length
+        self.image_shape = (480,640)
 
         self.num_frames = []
         for folder in self.folders:
@@ -103,18 +105,24 @@ class YCB_Dataset(Dataset):
                 label1 = cv2.imread(os.path.join(folder, str(idx1).zfill(6)+'-label.png'), cv2.IMREAD_COLOR)
                 label2 = cv2.imread(os.path.join(folder, str(idx2).zfill(6)+'-label.png'), cv2.IMREAD_COLOR)
 
-                intrinsic1 = sio.loadmat(os.path.join(folder, str(idx1).zfill(6)+'-meta.mat'))['intrinsic_matrix']
-                intrinsic2 = sio.loadmat(os.path.join(folder, str(idx2).zfill(6)+'-meta.mat'))['intrinsic_matrix']
+                meta_info1 = sio.loadmat(os.path.join(folder, str(idx1).zfill(6)+'-meta.mat'))
+                meta_info2 = sio.loadmat(os.path.join(folder, str(idx2).zfill(6)+'-meta.mat'))
+                intrinsic1 = meta_info1['intrinsic_matrix']
+                intrinsic2 = meta_info2['intrinsic_matrix']
+                gt_poses1 = meta_info1['poses']
+                gt_poses2 = meta_info2['poses']
 
                 return {
                         'color1': color1,
                         'depth1': depth1,
                         'label1': label1,
+                        'gt_poses1': gt_poses1,
                         'intrinsic1': intrinsic1,
                         'color2': color2,
                         'depth2': depth2,
                         'label2': label2,
-                        'intrinsic2': intrinsic2
+                        'intrinsic2': intrinsic2,
+                        'gt_poses2': gt_poses2
                         }
 
             num_frames += self.num_frames[i]
@@ -125,5 +133,7 @@ class YCB_Dataset(Dataset):
 
 #dataset = NOCS_Dataset('/media/llewyn/TOSHIBA EXT/PoseEstimation/NOCS')
 #print(dataset[0])
-dataset = YCB_Dataset("/media/llewyn/TOSHIBA EXT/YCB_zip")
-print(dataset.models)
+#dataset = YCB_Dataset("/media/llewyn/TOSHIBA EXT/YCB_zip")
+#print(dataset.models)
+#pt_cld = dataset.models['009']
+#keypoints = dataset.FPSKeypoints(pt_cld)
