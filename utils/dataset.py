@@ -6,6 +6,7 @@ import torch
 from torch.utils.data import DataLoader, Dataset
 
 import numpy as np
+import open3d as o3d
 import scipy.io as sio
 
 
@@ -81,7 +82,8 @@ class YCB_Dataset(Dataset):
 
         self.models = {}
         for model_folder in os.listdir(os.path.join(root_dir, 'models')):
-            self.models[model_folder[0:3]] = np.loadtxt(os.path.join(root_dir, 'models', model_folder, 'points.xyz'))
+            mesh = o3d.io.read_triangle_mesh(os.path.join(root_dir, 'models', model_folder, 'textured.obj'))
+            self.models[model_folder[0:3]] = np.array(mesh.vertices)
 
     def __len__(self):
         total_frames = 0
