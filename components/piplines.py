@@ -94,7 +94,9 @@ class ResNet_Baseline(nn.Module):
         return offset, confidence
 
 
+"""
 baseline = ResNet_Baseline(8)
-prev_frame = torch.zeros(1,3,256,256)
-next_frame = torch.zeros(1,3,256,256)
-print(baseline(prev_frame,next_frame))
+prev_frame = torch.zeros(1,3,480,640)
+next_frame = torch.zeros(1,3,480,640)
+print(baseline(prev_frame,next_frame).shape)
+"""

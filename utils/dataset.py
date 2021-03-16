@@ -69,7 +69,7 @@ class YCB_Dataset(Dataset):
         self.root_dir = os.path.join(root_dir, 'data')
         self.folders = os.listdir(self.root_dir)
 
-        self.num_scenes = len(self.folders)
+        self.num_scenes = len(self.folders) 
         self.length = length
         self.image_shape = (480,640)
 
@@ -129,13 +129,4 @@ class YCB_Dataset(Dataset):
 
             num_frames += self.num_frames[i]
 
-    def __getitem__(self, idx):
-        pass
 
-
-#dataset = NOCS_Dataset('/media/llewyn/TOSHIBA EXT/PoseEstimation/NOCS')
-#print(dataset[0])
-#dataset = YCB_Dataset("/media/llewyn/TOSHIBA EXT/YCB_zip")
-#print(dataset.models)
-#pt_cld = dataset.models['009']
-#keypoints = dataset.FPSKeypoints(pt_cld)
