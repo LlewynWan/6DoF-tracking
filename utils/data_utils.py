@@ -1,4 +1,5 @@
 import cv2
+import torch
 import numpy as np
 
 
@@ -65,7 +66,7 @@ def project_to_image(pt_cld, intrinsics, tra, rot):
     homo_coord = intrinsics @ (rigid @ homo_coord.T)
 
     coord_2D = homo_coord[:2, :] / homo_coord[2, :]
-    coord_2D = ((np.floor(coord_2D)).T).astype(int)
+    coord_2D = ((torch.floor(coord_2D)).T).int()
 
     return coord_2D
 
@@ -78,3 +79,13 @@ def create_gt_mask(pt_cld, intrinsics, tra, rot, label, image_shape=(480,640)):
     ID_mask[y_2d, x_2d] = label
 
     return fill_holes(ID_mask)
+
+def calc_offset(keypoints, image_size=(480,640)):
+    numkpt = keypoints.shape[0]
+    X,Y = np.meshgrid(np.arange(image_size[0]), np.arange(image_size[1]))
+    offset = np.concatenate((np.expand_dims(X, axis=2), np.expand_dims(Y, axis=2)), axis=2)
+    offset = np.tile(np.expand_dims(np.transpose(offset, (1,0,2)), axis=2), (1,1,numkpt,1))
+    offset = (keypoints - torch.from_numpy(offset)) / torch.Tensor(image_size)
+
+    return offset
+

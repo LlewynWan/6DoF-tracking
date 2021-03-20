@@ -49,7 +49,6 @@ class NOCS_Dataset(Dataset):
                 mask1 = cv2.imread(os.path.join(self.root_dir, 'scene_'+str(i+1), idx1+'_mask.png'), cv2.IMREAD_COLOR)
                 mask2 = cv2.imread(os.path.join(self.root_dir, 'scene_'+str(i+1), idx2+'_mask.png'), cv2.IMREAD_COLOR)
 
-                objects = [line[0:3] for line in open(os.path.join(self.root_dir,'scene_'+str(i+1),idx1+'-box.txt').readlines() if len(line)>3]
 
                 return {
                         'color1': color1,
@@ -59,8 +58,7 @@ class NOCS_Dataset(Dataset):
                         'color2': color2,
                         'coord2': coord2,
                         'depth2': depth2,
-                        'mask2': mask2,
-                        'objects': objects
+                        'mask2': mask2
                         }
             
             num_frames += self.num_frames[i]
@@ -117,6 +115,8 @@ class YCB_Dataset(Dataset):
                 gt_poses1 = meta_info1['poses']
                 gt_poses2 = meta_info2['poses']
 
+                objects = [line[0:3] for line in open(os.path.join(folder, str(idx1).zfill(6)+'-box.txt')).readlines() if len(line)>3]
+
                 return {
                         'color1': color1,
                         'depth1': depth1,
@@ -127,7 +127,8 @@ class YCB_Dataset(Dataset):
                         'depth2': depth2,
                         'label2': label2,
                         'intrinsic2': intrinsic2,
-                        'gt_poses2': gt_poses2
+                        'gt_poses2': gt_poses2,
+                        'objects': objects
                         }
 
             num_frames += self.num_frames[i]

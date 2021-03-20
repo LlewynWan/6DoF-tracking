@@ -64,7 +64,7 @@ class ResNet_Baseline(nn.Module):
             nn.Conv2d(in_channel+s2dim, raw_dim, 3, 1, 1, bias=False),
             nn.BatchNorm2d(raw_dim),
             nn.LeakyReLU(0.1,True),
-            nn.Conv2d(raw_dim, ver_dim+1, 1, 1)
+            nn.Conv2d(raw_dim, ver_dim*2+1, 1, 1)
         )
 
 
