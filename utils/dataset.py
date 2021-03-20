@@ -49,6 +49,8 @@ class NOCS_Dataset(Dataset):
                 mask1 = cv2.imread(os.path.join(self.root_dir, 'scene_'+str(i+1), idx1+'_mask.png'), cv2.IMREAD_COLOR)
                 mask2 = cv2.imread(os.path.join(self.root_dir, 'scene_'+str(i+1), idx2+'_mask.png'), cv2.IMREAD_COLOR)
 
+                objects = [line[0:3] for line in open(os.path.join(self.root_dir,'scene_'+str(i+1),idx1+'-box.txt').readlines() if len(line)>3]
+
                 return {
                         'color1': color1,
                         'coord1': coord1,
@@ -57,7 +59,8 @@ class NOCS_Dataset(Dataset):
                         'color2': color2,
                         'coord2': coord2,
                         'depth2': depth2,
-                        'mask2': mask2
+                        'mask2': mask2,
+                        'objects': objects
                         }
             
             num_frames += self.num_frames[i]
