@@ -96,9 +96,9 @@ class YCB_Dataset(Dataset):
     def __getitem__(self, idx):
         num_frames = 0
         for i in range(self.num_scenes):
-            if num_frames + self.num_frames[i] - i > idx:
-                idx1 = idx - num_frames + 1
-                idx2 = idx - num_frames + 2
+            if num_frames + self.num_frames[i] - (i+1) > idx:
+                idx1 = idx - num_frames + i + 1
+                idx2 = idx - num_frames + i + 2
                 folder = os.path.join(self.root_dir, str(i).zfill(4))
 
                 color1 = cv2.imread(os.path.join(folder, str(idx1).zfill(6)+'-color.png'), cv2.IMREAD_COLOR)
