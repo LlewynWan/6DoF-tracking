@@ -23,19 +23,16 @@ def YCBDataCollect(batch):
 
 
 if __name__=='__main__':
-    model = ResNet_Baseline(9).cuda()
+    model = ResNet_Baseline(9)
     #dataset = YCB_Dataset('/media/llewyn/TOSHIBA EXT/YCB_zip/')
     dataset = YCB_Dataset('../YCB')
     dataloader = DataLoader(dataset, batch_size=num_batch_size, shuffle=True, num_workers=4, collate_fn=YCBDataCollect)
-    
-    optimizer = torch.optim.Adam(model.parameters(), lr=0.002)
 
     for batch_idx, batch in enumerate(dataloader):
-        optimizer.zero_grad()
-        color1 = batch['color1'].cuda().permute(0,3,1,2) / 255.
-        color2 = batch['color2'].cuda().permute(0,3,1,2) / 255.
-        mask1 = batch['label1'].cuda()
-        mask2 = batch['label2'].cuda()
+        color1 = batch['color1'].permute(0,3,1,2) / 255.
+        color2 = batch['color2'].permute(0,3,1,2) / 255.
+        mask1 = batch['label1']
+        mask2 = batch['label2']
         K1 = batch['intrinsic1']
         K2 = batch['intrinsic2']
         #print(color1.shape,color2.shape)
@@ -63,19 +60,11 @@ if __name__=='__main__':
 
             offset_delta = offset_pred[i]
             offset_delta = torch.reshape(offset_pred[i].permute(1,2,0),image_shape+(9,2))
-            offset = offset_prev.cuda() + offset_delta
+            offset = offset_prev + offset_delta
             
-            loss_offset = F.mse_loss(offset, offset_gt.float().cuda())
+            loss_offset = F.mse_loss(offset, offset_gt)
 
             mask_union = (mask1[i] & mask2[i])[:,:,0]
-            mask_union = (mask_union != 0).float()
-            loss_mask = F.binary_cross_entropy(F.softmax(conf[i]), mask_union)
-
-            loss += loss_mask + loss_offset
-
-        loss /= num_batch_size
-        print(loss)
-        loss.backward()
-        optimizer.step()
+            print(mask_union.shape, conf[i].shape)
 
 
