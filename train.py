@@ -2,6 +2,8 @@ import torch
 import torch.nn.functional as F
 from torch.utils.data import Dataset, DataLoader
 
+from torch.utils.tensorboard import SummaryWriter
+
 from tqdm import tqdm
 from utils.dataset import *
 from utils.data_utils import *
@@ -11,6 +13,10 @@ from components.piplines import ResNet_Baseline
 num_epoch = 300
 num_batch_size = 8
 image_shape = (480,640)
+
+log_every_n_step = 100
+
+writer = SummaryWriter(log_dir='./logs/')
 
 
 def YCBDataCollect(batch):
@@ -87,7 +93,12 @@ if __name__=='__main__':
             pbar.set_postfix(loss=loss.cpu().detach().numpy())
             pbar.update(1)
 
+            if batch_idx % log_every_n_step == 0:
+                writer.add_scalar('loss', loss.detach())
+
         if epoch % 10 == 0:
             torch.save(model.state_dict(), 'models/epoch='+str(epoch)+'.ckpt')
+
+    writer.close()
 
 
