@@ -99,7 +99,7 @@ class YCB_Dataset(Dataset):
             if num_frames + self.num_frames[i] - (i+1) > idx:
                 idx1 = idx - num_frames + i + 1
                 idx2 = idx - num_frames + i + 2
-                folder = os.path.join(self.root_dir, str(i).zfill(4))
+                folder = os.path.join(self.root_dir, self.folders[i])
 
                 color1 = cv2.imread(os.path.join(folder, str(idx1).zfill(6)+'-color.png'), cv2.IMREAD_COLOR)
                 color2 = cv2.imread(os.path.join(folder, str(idx2).zfill(6)+'-color.png'), cv2.IMREAD_COLOR)

@@ -94,7 +94,8 @@ if __name__=='__main__':
             pbar.update(1)
 
             if batch_idx % log_every_n_step == 0:
-                writer.add_scalar('loss', loss.detach())
+                step = epoch * len(dataloader) + batch_idx
+                writer.add_scalar('loss', loss.detach(), step)
 
         if epoch % 10 == 0:
             torch.save(model.state_dict(), 'models/epoch='+str(epoch)+'.ckpt')
